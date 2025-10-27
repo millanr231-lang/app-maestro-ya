@@ -1,6 +1,7 @@
 # yaml-language-server: $schema=https://firebase.google.com/static/apphosting/schema.json
-# The location of the Next.js app to deploy
-run: npm run start
+run:
+  # The command to run the Next.js app
+  command: node .next/standalone/server.js
 # The command to build the Next.js app
 build: npm run build
 # The roots of the Next.js app
