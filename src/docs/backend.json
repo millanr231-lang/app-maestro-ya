@@ -1,0 +1,182 @@
+
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Represents a user's profile in the system.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "The user's unique ID."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "The user's email address."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The user's display name."
+        },
+        "photoURL": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL of the user's profile picture."
+        },
+        "phoneNumber": {
+            "type": "string",
+            "description": "The user's phone number."
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["SuperAdmin", "Gerente", "Dispatcher", "Técnico", "Cliente", "Maestro", "Auditor", "AdministradorClientes"]
+          },
+          "description": "Roles assigned to the user."
+        }
+      },
+      "required": ["uid", "email"]
+    },
+    "ServiceRequest": {
+      "title": "Service Request",
+      "description": "Represents a customer's request for a service.",
+      "type": "object",
+      "properties": {
+        "customerName": { "type": "string" },
+        "customerEmail": { "type": "string", "format": "email"},
+        "customerPhone": { "type": "string" },
+        "customerOrigin": { "type": "string", "enum": ["Web", "WhatsApp", "Llamada", "Email", "Referido", "Otro"] },
+        "serviceType": { "type": "string" },
+        "location": { "type": "string" },
+        "problemDescription": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "assigned", "in_progress", "en_ruta", "completed", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "scheduledAt": { "type": "string", "format": "date-time", "description": "The scheduled date and time for the service." },
+        "customerId": { "type": "string" },
+        "technicianId": { "type": "string" }
+      },
+      "required": ["customerName", "serviceType", "location", "status", "createdAt"]
+    },
+    "Quote": {
+      "title": "Quote",
+      "description": "Represents a price quote for a service request.",
+      "type": "object",
+      "properties": {
+        "serviceRequestId": { "type": "string" },
+        "technicianId": { "type": "string" },
+        "customerId": { "type": "string" },
+        "description": { "type": "string", "description": "General description of the quoted service." },
+        "notes": { "type": "string", "description": "Internal or technical notes for the quote." },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "description": { "type": "string" },
+              "quantity": { "type": "number" },
+              "price": { "type": "number" }
+            },
+            "required": ["description", "quantity", "price"]
+          }
+        },
+        "subtotal": { "type": "number" },
+        "vatPercentage": { "type": "number", "description": "VAT percentage applied."},
+        "vatAmount": { "type": "number", "description": "Calculated VAT amount."},
+        "discountAmount": { "type": "number", "description": "Discount amount to be subtracted."},
+        "totalAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["draft", "sent", "approved", "rejected", "expired"] },
+        "generatedMessage": { "type": "string" },
+        "history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "status": { "type": "string" },
+              "timestamp": { "type": "string", "format": "date-time" },
+              "actorId": { "type": "string" }
+            }
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "validUntil": { "type": "string", "format": "date-time", "description": "The date the quote expires."}
+      },
+      "required": ["serviceRequestId", "technicianId", "customerId", "items", "totalAmount", "status", "createdAt", "updatedAt"]
+    },
+    "AuditLog": {
+      "title": "Audit Log",
+      "description": "Represents a record of a critical action performed in the system for auditing purposes.",
+      "type": "object",
+      "properties": {
+        "action": { "type": "string", "description": "The type of action performed, e.g., 'user.role.update'." },
+        "actorId": { "type": "string", "description": "The UID of the user who performed the action." },
+        "actorEmail": { "type": "string", "description": "The email of the user who performed the action." },
+        "targetUserId": { "type": "string", "description": "The UID of the user who was affected by the action." },
+        "targetUserEmail": { "type": "string", "description": "The email of the user who was affected." },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "details": {
+          "type": "object",
+          "properties": {
+            "previousRoles": { "type": "array", "items": { "type": "string" } },
+            "newRoles": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      },
+      "required": ["action", "actorId", "actorEmail", "targetUserId", "targetUserEmail", "timestamp", "details"]
+    },
+    "DemoRequest": {
+      "title": "Demo Request",
+      "description": "Represents a request for a product demonstration from a potential lead.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "company": { "type": "string" },
+        "message": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "contacted", "completed", "rejected"], "default": "pending" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "email", "createdAt"]
+    }
+  },
+  "auth": {
+    "providers": ["google.com"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/UserProfile"
+      },
+      "description": "Stores public profiles for all users."
+    },
+    "/serviceRequests/{serviceRequestId}": {
+      "schema": {
+        "$ref": "#/entities/ServiceRequest"
+      },
+      "description": "Stores all service requests from customers."
+    },
+    "/quotes/{quoteId}": {
+      "schema": {
+        "$ref": "#/entities/Quote"
+      },
+      "description": "Stores all quotes generated for service requests."
+    },
+    "/auditLogs/{auditLogId}": {
+      "schema": {
+        "$ref": "#/entities/AuditLog"
+      },
+      "description": "Stores a log of critical system events for auditing."
+    },
+     "/demoRequests/{demoRequestId}": {
+      "schema": {
+        "$ref": "#/entities/DemoRequest"
+      },
+      "description": "Stores all requests for a product demo."
+    }
+  }
+}
+
+    

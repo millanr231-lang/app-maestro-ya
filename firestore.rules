@@ -1,0 +1,95 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description Checks if the request is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * @description Checks if the authenticated user's UID matches the provided userId.
+     */
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+    
+    /**
+     * @description Checks if the user is a SuperAdmin by reading their role from their user document.
+     * This requires the user to be able to read their own user document.
+     * This version is safer because it checks for the existence of the 'roles' field.
+     */
+    function isSuperAdmin() {
+      let userDoc = get(/databases/$(database)/documents/users/$(request.auth.uid));
+      return isSignedIn() &&
+             'roles' in userDoc.data &&
+             'SuperAdmin' in userDoc.data.roles;
+    }
+
+    /**
+     * @description Access rules for technicians. Only SuperAdmins can modify.
+     */
+    match /technicians/{technicianId} {
+      allow read: if isSignedIn();
+      allow write: if isSuperAdmin();
+    }
+
+    /**
+     * @description Access rules for user profiles.
+     */
+    match /users/{userId} {
+      allow get: if isSuperAdmin() || isOwner(userId);
+      allow list: if isSuperAdmin();
+      allow create: if isSuperAdmin() || isOwner(userId);
+      allow update: if isSuperAdmin() || isOwner(userId);
+      allow delete: if isSuperAdmin() || isOwner(userId);
+    }
+
+    /**
+     * @description Access rules for service requests.
+     * Any authenticated user can see all requests for now, but only SuperAdmins can modify them.
+     * For more granular control, you should add a 'userId' field to your service requests.
+     */
+    match /serviceRequests/{serviceRequestId} {
+      allow read: if isSignedIn();
+      allow write: if isSuperAdmin();
+    }
+
+    /**
+     * @description Access rules for quotes.
+     * Any authenticated user can see all quotes for now, but only SuperAdmins can modify them.
+     * For more granular control, you should add a 'userId' field to your quotes.
+     */
+    match /quotes/{quoteId} {
+      allow read: if isSignedIn();
+      allow write: if isSuperAdmin();
+    }
+
+    /**
+     * @description Access rules for audit logs. Read-only for SuperAdmins.
+     */
+    match /auditLogs/{auditLogId} {
+      allow read: if isSuperAdmin(); 
+      allow write: if false;
+    }
+
+    /**
+     * @description Access rules for demo requests.
+     */
+    match /demoRequests/{demoRequestId} {
+       allow read: if isSignedIn();
+       allow create: if true; // Allow anyone to create a demo request
+       allow update, delete: if isSuperAdmin();
+    }
+    
+    /**
+     * @description Access rules for mail.
+     */
+    match /mail/{mailId} {
+      allow read, write: if isSuperAdmin();
+      allow create: if isSignedIn();
+    }
+  }
+}
