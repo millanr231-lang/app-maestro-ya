@@ -9,16 +9,16 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarInset,
-} from "@/components/ui/sidebar";
-import { SidebarNav } from "@/components/layout/sidebar-nav";
-import { Header } from "@/components/layout/header";
-import { UserNav } from "@/components/layout/user-nav";
-import { MaestroYaLogo } from "@/components/logo";
-import { useUser, useDoc } from "@/firebase";
+} from "../../components/ui/sidebar";
+import { SidebarNav } from "../../components/layout/sidebar-nav";
+import { Header } from "../../components/layout/header";
+import { UserNav } from "../../components/layout/user-nav";
+import { MaestroYaLogo } from "../../components/logo";
+import { useUser, useDoc } from "../../firebase";
 import { useRouter } from "next/navigation";
 import { useEffect, createContext, useContext, useMemo } from "react";
 import { Loader2 } from "lucide-react";
-import { useFirestore } from "@/firebase";
+import { useFirestore } from "../../firebase";
 
 // 1. Create a context to hold the user profile
 export type UserProfile = {

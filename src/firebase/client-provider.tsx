@@ -1,10 +1,10 @@
 
 'use client';
-import { app, auth, firestore } from '@/firebase/index';
-import { FirebaseProvider } from '@/firebase/provider';
+import { app, auth, firestore } from './index';
+import { FirebaseProvider } from './provider';
 import { ReactNode, useEffect, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { UserContext } from '@/firebase/auth/use-user';
+import { UserContext } from './auth/use-user';
 
 
 type FirebaseClientProviderProps = {

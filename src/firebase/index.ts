@@ -4,17 +4,17 @@
 import { getApp, getApps, initializeApp, FirebaseApp } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
-import { firebaseConfig } from '@/firebase/config';
+import { firebaseConfig } from './config';
 
-import { useCollection } from '@/firebase/firestore/use-collection';
-import { useDoc } from '@/firebase/firestore/use-doc';
-import { useUser } from '@/firebase/auth/use-user';
+import { useCollection } from './firestore/use-collection';
+import { useDoc } from './firestore/use-doc';
+import { useUser } from './auth/use-user';
 import {
   FirebaseProvider,
   useFirebaseApp,
   useAuth,
   useFirestore,
-} from '@/firebase/provider';
+} from './provider';
 import { FirebaseClientProvider } from './client-provider';
 
 // This function ensures Firebase is initialized only once.

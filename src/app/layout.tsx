@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from '../components/ui/toaster';
 import './globals.css';
-import { FirebaseClientProvider } from '@/firebase/client-provider';
-import { ThemeProvider } from '@/components/theme-provider';
+import { FirebaseClientProvider } from '../firebase/client-provider';
+import { ThemeProvider } from '../components/theme-provider';
 import { Inter } from 'next/font/google';
-import { cn } from '@/lib/utils';
+import { cn } from '../lib/utils';
 
 const fontSans = Inter({
   subsets: ['latin'],

@@ -3,15 +3,15 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '../components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { ArrowRight, UserCheck, ShieldCheck, Zap, Droplets, HardHat, Hammer, Star, Search, UserPlus } from 'lucide-react';
-import { MaestroYaLogo } from '@/components/logo';
+import { MaestroYaLogo } from '../components/logo';
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { DemoRequestForm } from '@/components/landing/demo-request-form';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
+import { DemoRequestForm } from '../components/landing/demo-request-form';
 import { useInView } from 'react-intersection-observer';
-import { CountUp } from '@/components/ui/count-up';
+import { CountUp } from '../components/ui/count-up';
 
 const services = [
   {
